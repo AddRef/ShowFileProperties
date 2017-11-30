@@ -19,11 +19,14 @@ def convert_bytes(n):
 class ShowFileProperties(DirectoryPaneCommand):
     def __call__(self):
         selected_files = self.pane.get_selected_files()
+        choosen_files = self.get_chosen_files()
         files_num = 0
         files_size = 0
         folders_num = 0
         fsubfiles = 0
         output = "Properties\n\n"
+        selected_files = [n.replace('file://', '') for n in selected_files]
+        choosen_files = [n.replace('file://', '') for n in choosen_files]
 
         if len(selected_files) > 1:
             for n in selected_files:
@@ -40,11 +43,11 @@ class ShowFileProperties(DirectoryPaneCommand):
                 output += "Selected directories:\t\t" + str(folders_num) + "\n"
                 output += "Combined size for directories::\t" + str(convert_bytes(fsubfiles)) + "\n\n"
 
-        elif len(selected_files) == 1 or (len(selected_files) == 0 and self.get_chosen_files()):
+        elif len(selected_files) == 1 or (len(selected_files) == 0 and choosen_files):
             if len(selected_files) == 1:
                 n = selected_files[0]
-            elif len(selected_files) == 0 and self.get_chosen_files():
-                n = self.get_chosen_files()[0]
+            elif len(selected_files) == 0 and choosen_files:
+                n = choosen_files[0]
             files_size += stat(n).st_size
             finfo = stat(n)
             flastmodified = datetime.date.fromtimestamp(finfo.st_mtime)
